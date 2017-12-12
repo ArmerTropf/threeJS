@@ -1,0 +1,157 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+
+    <script src="js/index.js"></script>
+    <script src="./build/three.js"></script>
+    <script src="js/tween.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+
+</head>
+
+<body>
+    <!-- <img id="video" src="http://192.168.178.22:8080/video" width="1037" height="583"> -->
+    <!-- <video id="video" autoplay loop webkit-playsinline style="display:none">
+			<source src="video/toystory.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+			<source src="textures/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+    </video> -->
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 500);
+        var controls = new THREE.OrbitControls(camera);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var geometry = new THREE.PlaneGeometry(20, 20, 32);
+        var texture = new THREE.TextureLoader().load('img/mario.png');
+        var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+        var cube = new THREE.Mesh(geometry, material);
+
+        var geometry2 = new THREE.PlaneGeometry(15, 30, 32);
+        var texture2 = new THREE.TextureLoader().load('img/text.png');
+        var material2 = new THREE.MeshBasicMaterial({ map: texture2, side: THREE.DoubleSide });
+        var cube2 = new THREE.Mesh(geometry2, material2);
+
+
+        var geometry3 = new THREE.PlaneGeometry(30, 15);
+        var texture3 = new THREE.TextureLoader().load('img/text.png');
+
+        var material3 = new THREE.MeshBasicMaterial({ map: texture2, side: THREE.DoubleSide });
+        var cube3 = new THREE.Mesh(geometry3, material3);
+
+
+        cube.scale.set(0.8, 0.8, 0.8);
+        scene.add(cube);
+        scene.add(cube2);
+        scene.add(cube3);
+
+
+        cube.position.set(10, 10, -10);
+        cube2.position.set(-10, -10, 10);
+        cube3.position.set(20, 30, -30);
+
+        camera.position.z = 100;
+
+
+        camera.lookAt(cube.position);
+
+
+        modelArray = [cube, cube2];
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            // cube.rotation.x += 0.1;
+            // cube.rotation.y += 0.1;
+            render();
+
+        }
+
+        animate();
+
+        function render() {
+            // renderer.render(scene, camera);
+            camera.position.x += 1;
+                camera.position.y += 1;
+                camera.position.z += 1;
+        }
+
+        function setCamera(oldmodel, newmodel) {
+            //camera.lookAt(newmodel.position);
+            console.log(oldmodel.position.x + " " + newmodel.position.x);
+            
+            while (oldmodel.position.x != newmodel.position.x) {
+                
+                console.log("X: " + oldmodel.position.x + " " + newmodel.position.x);
+                console.log("Y: " + oldmodel.position.y + " " + newmodel.position.y);
+                console.log("Z: " + oldmodel.position.z + " " + newmodel.position.z);
+                if (oldmodel.position.x != newmodel.position.x) {
+                    oldmodel.position.x = oldmodel.position.x + Math.sign(newmodel.position.x);
+                }
+                if (oldmodel.position.y != newmodel.position.y) {
+                    oldmodel.position.y = oldmodel.position.y + Math.sign(newmodel.position.y);
+                }
+                if (oldmodel.position.z != newmodel.position.z) {
+                    oldmodel.position.z = oldmodel.position.z + Math.sign(newmodel.position.z);
+                }
+
+                
+
+                camera.position.x = oldmodel.position.x
+                camera.position.y = oldmodel.position.y
+                camera.position.z = oldmodel.position.z
+                renderer.render(scene, camera);
+            }
+            renderer.render(scene, camera);
+
+            //  camera.lookAt(newmodel.position);
+        }
+
+        document.onkeydown = checkKey;
+
+
+        console.log(modelArray[0].position.x);
+
+        function checkKey(e) {
+
+            e = e || window.event;
+
+            if (e.keyCode == '38') {
+                // up arrow
+            }
+            else if (e.keyCode == '40') {
+                // down arrow
+            }
+            else if (e.keyCode == '37') {
+
+                setCamera(modelArray[1], modelArray[0])
+            }
+            else if (e.keyCode == '39') {
+
+                setCamera(modelArray[0], modelArray[1])
+            }
+
+        }
+
+
+    </script>
+</body>
+
+</html>
